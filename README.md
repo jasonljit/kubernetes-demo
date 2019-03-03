@@ -38,7 +38,7 @@ kubectl label node minikube hardware=high-memory
 
 ## Health Check
 
-- 可能 pod 正常運行，但內部 container 的 service crash 了，可以透過 health check 檢查出來並重啟 container
+可能 pod 正常運行，但內部 container 的 service crash 了，可以透過 health check 檢查出來並重啟 container
 
 **建立有 health check 的 deployment**
 ```
@@ -57,4 +57,4 @@ minikube service deployment-with-health-check-service --url
 ```
 
 **戳 /shut-down 使 webapp 停止運作**
-health check 達到失敗上限，重啟 container
+> health check 達到失敗上限，重啟 container
