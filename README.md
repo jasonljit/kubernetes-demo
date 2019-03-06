@@ -58,3 +58,51 @@ minikube service deployment-with-health-check-service --url
 
 **戳 /shut-down 使 webapp 停止運作**
 > health check 達到失敗上限，重啟 container
+
+
+## Kube-dns
+Kubernetes 內部提供一個 kube-dns 的插件，讓我們可以不需要知道 Service 的 Cluster IP ，只透過 Service 的名稱，就能找到相對應 Pods 。
+
+### 用 alpine 測試用 service name 連到服務
+
+**建立 alpine pod，並進入 shell**
+```
+kubectl run -i --tty alpine --image=alpine --restart=Never -- sh
+```
+**安裝 curl 套件**
+```
+apk add --no-cache curl
+```
+**用 service name 戳剛才建立的 web**
+```
+curl deployment-with-health-check-service:3000
+```
+有收到 response，代表 kube-dns 有把 service name 轉成 clusterIP
+
+## Volume
+儲存空間
+- emptyDir
+- hostPath
+- cloud storage
+****
+
+## Config Map
+用來存 configure
+
+**下載 config 檔**
+```
+curl {url} -o demo-config.json
+```
+**用檔案產生 config map**
+```
+kubectl create configmap demo-config --from-file=./demo-config.json
+```
+**建立 pod**
+```
+curl {url} | kubectl apply -f -
+```
+用 volume 的方式把 config 掛載到 pod 裡
+
+**expose service**
+
+**get url**
