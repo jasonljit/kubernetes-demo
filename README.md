@@ -84,7 +84,42 @@ curl deployment-with-health-check-service:3000
 - emptyDir
 - hostPath
 - cloud storage
-****
+
+### emptyDir
+**建立含有兩個 container 的 pod**
+這兩個 container 都把 emptyDir volume 掛載在 /cache
+```
+curl {url} | kubectl apply -f -
+```
+**進入 container-1 的 bash，並在 /cache 資料夾新增檔案**
+```
+kubectl exec -it empty-dir-pod -c container-1 -- /bin/bash
+echo Hello > /cache/hello.txt 
+```
+**進入 container-2 的 bash，檢查 /cache 資料夾是否有剛才新增的檔案**
+```
+kubectl exec -it empty-dir-pod -c container-2 -- /bin/bash
+cat /cache/hello.txt 
+```
+
+### hostPath
+**含有一個 container 的 pod，並把 host 的 /tmp 掛載到 container 的 /tmp**
+```
+curl {url} | kubectl apply -f -
+```
+**用 ssh 連到 host，查看 /tmp 底下的資料，新增一個檔案**
+```
+minikube ssh
+ls -l /tmp
+echo Hello > /tmp/hello.txt 
+```
+**進入 container 的 bash，確認 volume 有被掛載**
+```
+kubectl exec -it host-path-pod -- /bin/bash
+ls -l /tmp
+cat /tmp/hello.txt
+```
+
 
 ## Config Map
 用來存 configure
