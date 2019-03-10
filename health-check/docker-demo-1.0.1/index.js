@@ -1,17 +1,25 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+
+let isHealthy = true;
+
 app.get('/', function(req, res) {
   res.send('Hello World!');
 });
-app.get('/health', function(req, res) {
-  res.send('Still alive!');
-});
-app.get('/shut-down', function(req, res) {
-  process.exit();
-});
-var server = app.listen(3000, function() {
-  var host = server.address().address;
-  var port = server.address().port;
 
-  console.log("Example app listening at 'http://%s:%s'", host, port);
-})
+app.get('/health', function(req, res) {
+  if (isHealthy) {
+    res.send('Still Alive!');
+  }
+});
+
+app.get('/sick', function(req, res) {
+  isHealthy = false;
+
+  res.send("I'm Sick!");
+});
+
+http.listen(3000, () => {
+  console.log('Server running on port 3000');
+});

@@ -14,5 +14,6 @@ spec:
     image: jasonljit/docker-demo:1.0.0
     ports:
     - containerPort: 3000
+
   nodeSelector:
     hardware: high-memory
