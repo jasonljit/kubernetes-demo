@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: host-path-pod
+  name: pod-with-host-path
 spec:
   containers:
 

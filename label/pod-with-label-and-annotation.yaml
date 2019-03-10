@@ -10,7 +10,7 @@ metadata:
     site: ljit.io
 spec:
   containers:
-  - name: little-container
+  - name: container-1
     image: jasonljit/docker-demo:1.0.0
     ports:
     - containerPort: 3000

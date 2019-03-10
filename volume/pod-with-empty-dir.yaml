@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: empty-dir-pod
+  name: pod-with-empty-dir
 spec:
   containers:
 
-  - image: jasonljit/docker-demo:1.0.1
+  - image: jasonljit/docker-demo:1.0.0
     name: container-1
     ports:
     - containerPort: 3000
