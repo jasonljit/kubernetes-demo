@@ -163,12 +163,8 @@ curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-m
 [pod-with-config-map.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/pod-with-config-map.yaml)  
 [docker-demo:1.0.3](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/docker-demo-1.0.3/index.js)
 
-**expose service**
+**進到 container 的 bash，用 curl 戳 server，確認 config map 有被掛載**
 ```
-kubectl expose pod pod-with-config-map --type=NodePort --name=service-with-config-map
-```
-
-**get url**
-```
-minikube service service-with-config-map --url
+kubectl exec -it pod-with-config-map -- /bin/bash
+curl localhost:3000/config
 ```
