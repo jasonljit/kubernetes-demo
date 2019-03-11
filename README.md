@@ -108,13 +108,13 @@ curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/volume/p
 
 **進入 container-1 的 bash，並在 /cache 資料夾新增檔案**
 ```
-kubectl exec -it empty-dir-pod -c container-1 -- /bin/bash
+kubectl exec -it pod-with-empty-dir -c container-1 -- /bin/bash
 echo Hello > /cache/hello.txt 
 ```
 
 **進入 container-2 的 bash，檢查 /cache 資料夾是否有剛才新增的檔案**
 ```
-kubectl exec -it empty-dir-pod -c container-2 -- /bin/bash
+kubectl exec -it pod-with-empty-dir -c container-2 -- /bin/bash
 cat /cache/hello.txt 
 ```
 
@@ -134,7 +134,7 @@ echo Hello > /tmp/hello.txt
 
 **進入 container 的 bash，確認 volume 有被掛載**
 ```
-kubectl exec -it host-path-pod -- /bin/bash
+kubectl exec -it pod-with-host-path -- /bin/bash
 ls -l /tmp
 cat /tmp/hello.txt
 ```
