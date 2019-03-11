@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 
-const { mode, db } = require('./config/config.json');
+const { mode, db } = require('./config/my-config.json');
 
 app.get('/', function(req, res) {
   res.send(`Hello World!`);
