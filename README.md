@@ -145,13 +145,13 @@ cat /tmp/hello.txt
 
 **下載 config 檔**
 ```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-map/config.json -o ~/my-config.json
+curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-map/config.json -o ./my-config.json
 ```
 [config.json](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/config.json)
 
 **用檔案產生 config map**
 ```
-kubectl create configmap my-config --from-file=~/my-config.json
+kubectl create configmap my-config --from-file=./my-config.json
 ```
 
 **建立 pod**
