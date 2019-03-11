@@ -24,6 +24,8 @@ kubectl get pods --show-labels
 kubectl describe pods pod-with-label-and-annotation
 ```
 
+> 也可以用 web ui 來看 kubernetes 的狀態：`minikube dashboard`
+
 ### Case 2: 用 label 來決定 pod 要跑在哪個 node 上
 **建立有 nodeSelector 的 pod**
 ```
@@ -167,4 +169,11 @@ curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-m
 ```
 kubectl exec -it pod-with-config-map -- /bin/bash
 curl localhost:3000/config
+```
+
+<hr />
+
+**刪掉 kubernetes resources**
+```
+kubectl delete [RESOURCE_NAME, ...]
 ```
