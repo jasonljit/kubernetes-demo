@@ -82,7 +82,7 @@ kubectl run -i --tty alpine --image=alpine --restart=Never -- sh
 
 **安裝 curl 套件**
 ```
-apk add --no-cache curl
+apk add curl
 ```
 
 **用 service name 戳剛才建立的 web**
@@ -141,6 +141,30 @@ ls -l /tmp
 cat /tmp/hello.txt
 ```
 
+### cloud storage
+Ex: aws-ebs
+- 建立一個 volume
+- 把 volume 掛載到 pod 上
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: apiserver
+spec:
+  containers:
+  - name: apiserver
+    image: jasonljit/docker-demo:1.0.0
+    ports:
+      - containerPort: 3000
+    volumeMounts:
+      - name: aws-ebs-volumes
+        mountPath: /tmp
+        
+  volumes:
+  - name: aws-ebs-volumes
+    awsElasticBlockStore:
+     volumeID: vol-0b29e0a08749ccef3
+```
 
 ## Config Map
 用來存 configure
