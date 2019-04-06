@@ -196,35 +196,6 @@ spec:
      volumeID: vol-0b29e0a08749ccef3
 ```
 
-## Config Map
-用來存 configure
-
-**下載 config 檔**
-```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-map/config.json -o ./my-config.json
-```
-[config.json](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/config.json)
-
-**用檔案產生 config map**
-```
-kubectl create configmap my-config --from-file=./my-config.json
-```
-
-**建立 pod**
-
-用 volume 的方式把 config 掛載到 pod 裡
-```
-kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-map/pod-with-config-map.yaml
-```
-[pod-with-config-map.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/pod-with-config-map.yaml)  
-[docker-demo:1.0.3](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/docker-demo-1.0.3/index.js)
-
-**進到 container 的 bash，用 curl 戳 server，確認 config map 有被掛載**
-```
-kubectl exec -it pod-with-config-map -- bash
-curl localhost:3000/config
-```
-
 <hr />
 
 **刪掉 kubernetes resources**
