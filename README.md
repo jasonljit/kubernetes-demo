@@ -36,13 +36,13 @@ kubectl describe pods demo-pod
 - 負責網路設定
 - 兩個種類：ClusterIP & NodePort
 
-**ClusterIP**
+### ClusterIP
 
 **建立 ClusterIP  service**
 ```
 kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/example-yaml/cluster-ip-service.yaml
 ```
-<a target="_blank" href="https://github.com/jasonljit/kubernetes-demo/blob/master/example-yaml/cluster-ip-service.yaml"> cluster-ip-service.yaml</a>
+[cluster-ip-service.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/example-yaml/cluster-ip-service.yaml)
 
 **建立測試用的 alpine pod**
 ```
@@ -59,13 +59,13 @@ kubectl exec -it alpine -- sh
 curl demo-cluster-ip-service
 ```
 
-**NodePort**
+### NodePort
 
 **建立 NodePort  service**
 ```
 kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/example-yaml/node-port-service.yaml
 ```
-<a target="_blank" href="https://github.com/jasonljit/kubernetes-demo/blob/master/example-yaml/node-port-service.yaml"> cluster-ip-service.yaml</a>
+[cluster-ip-service.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/example-yaml/node-port-service.yaml)
 
 **取得 url**
 ```
