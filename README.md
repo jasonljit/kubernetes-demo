@@ -1,18 +1,16 @@
 # kubernetes-demo
 
-## Label
+## Pod
 
-- 一對具有辨識度的key/value (env: production, env: dev)
-- 用來當作篩選條件
+- k8s 最小運行單位
+- pod 裡運行 container
 
-
-### Case 1: 建立帶有 label & annotation 的 pod
+**建立 pod**
 ```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/label/pod-with-label-and-annotation.yaml | kubectl apply -f -
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/example-yaml/pod.yaml
 ```
-[pod-with-label-and-annotation.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/label/pod-with-label-and-annotation.yaml)  
-[docker-demo:1.0.0](https://github.com/jasonljit/kubernetes-demo/blob/master/label/docker-demo-1.0.0/index.js)
-> annotation: 類似 label，給人看的資訊，kubernetes 不會拿來用
+
+[pod.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/example-yaml/pod.yaml)
 
 **看是否成功建立**
 ```
@@ -21,15 +19,69 @@ kubectl get pods --show-labels
 
 **看詳細內容**
 ```
-kubectl describe pods pod-with-label-and-annotation
+kubectl describe pods demo-pod
 ```
 
 > 也可以用 web ui 來看 kubernetes 的狀態：`minikube dashboard`
 
-### Case 2: 用 label 來決定 pod 要跑在哪個 node 上
+## Doployment
+
+- 幫助部署應用服務的工具
+    - replica
+    - 升級 (roll out)
+    - 退回先前版本 (roll back)
+    
+## Service
+
+- 負責網路設定
+- 兩個種類：ClusterIP & NodePort
+
+**ClusterIP**
+
+**建立 ClusterIP  service**
+```
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/example-yaml/cluster-ip-service.yaml
+```
+<a target="_blank" href="https://github.com/jasonljit/kubernetes-demo/blob/master/example-yaml/cluster-ip-service.yaml"> cluster-ip-service.yaml</a>
+
+**建立測試用的 alpine pod**
+```
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/example-yaml/alpine-pod.yaml
+```
+
+**進入 alpine container 的 sh**
+```
+kubectl exec -it alpine -- sh
+```
+
+**可以用 service name 戳剛才建立的 web**
+```
+curl demo-cluster-ip-service
+```
+
+**NodePort**
+
+**建立 NodePort  service**
+```
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/example-yaml/node-port-service.yaml
+```
+<a target="_blank" href="https://github.com/jasonljit/kubernetes-demo/blob/master/example-yaml/node-port-service.yaml"> cluster-ip-service.yaml</a>
+
+**取得 url**
+```
+minikube service demo-node-port-service --url
+```
+
+## Label
+
+- 一對具有辨識度的key/value (env: production, company: ljit)
+- 用來當作篩選條件
+
+
+### 用 label 來決定 pod 要跑在哪個 node 上
 **建立有 nodeSelector 的 pod**
 ```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/label/pod-with-node-selector.yaml | kubectl apply -f -
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/label/pod-with-node-selector.yaml
 ```
 [pod-with-node-selector.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/label/pod-with-node-selector.yaml)  
 
@@ -46,7 +98,7 @@ kubectl label node minikube hardware=high-memory
 
 **建立有 health check 的 pod**
 ```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/health-check/pod-with-health-check.yaml | kubectl apply -f -
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/health-check/pod-with-health-check.yaml
 ```
 [pod-with-health-check.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/health-check/pod-with-health-check.yaml)  
 [docker-demo:1.0.1](https://github.com/jasonljit/kubernetes-demo/blob/master/health-check/docker-demo-1.0.1/index.js)
@@ -69,28 +121,6 @@ minikube service service-with-health-check --url
 kubectl describe pod/pod-with-health-check
 ```
 
-
-## Kube-dns
-Kubernetes 內部提供一個 kube-dns 的插件，讓我們可以不需要知道 Service 的 Cluster IP ，只透過 Service 的名稱，就能找到相對應 Pods 。
-
-### 用 alpine 測試用 service name 連到服務
-
-**建立 alpine pod，並進入 shell**
-```
-kubectl run -i --tty alpine --image=alpine --restart=Never -- sh
-```
-
-**安裝 curl 套件**
-```
-apk add curl
-```
-
-**用 service name 戳剛才建立的 web**
-```
-curl service-with-health-check:3000
-```
-有收到 response，代表 kube-dns 有把 service name 轉成 clusterIP
-
 ## Volume
 
 儲存空間
@@ -104,26 +134,26 @@ curl service-with-health-check:3000
 
 這兩個 container 都把 emptyDir volume 掛載在 /cache
 ```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/volume/pod-with-empty-dir.yaml | kubectl apply -f -
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/volume/pod-with-empty-dir.yaml
 ```
 [pod-with-empty-dir.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/volume/pod-with-empty-dir.yaml)
 
 **進入 container-1 的 bash，並在 /cache 資料夾新增檔案**
 ```
-kubectl exec -it pod-with-empty-dir -c container-1 -- /bin/bash
+kubectl exec -it pod-with-empty-dir -c container-1 -- bash
 echo Hello > /cache/hello.txt 
 ```
 
 **進入 container-2 的 bash，檢查 /cache 資料夾是否有剛才新增的檔案**
 ```
-kubectl exec -it pod-with-empty-dir -c container-2 -- /bin/bash
+kubectl exec -it pod-with-empty-dir -c container-2 -- bash
 cat /cache/hello.txt 
 ```
 
 ### hostPath
 **建立含有一個 container 的 pod，並把 host 的 /tmp 掛載到 container 的 /tmp**
 ```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/volume/pod-with-host-path.yaml | kubectl apply -f -
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/volume/pod-with-host-path.yaml
 ```
 [pod-with-host-path.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/volume/pod-with-host-path.yaml)
 
@@ -136,7 +166,7 @@ echo Hello > /tmp/hello.txt
 
 **進入 container 的 bash，確認 volume 有被掛載**
 ```
-kubectl exec -it pod-with-host-path -- /bin/bash
+kubectl exec -it pod-with-host-path -- bash
 ls -l /tmp
 cat /tmp/hello.txt
 ```
@@ -184,14 +214,14 @@ kubectl create configmap my-config --from-file=./my-config.json
 
 用 volume 的方式把 config 掛載到 pod 裡
 ```
-curl https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-map/pod-with-config-map.yaml | kubectl apply -f -
+kubectl apply -f https://raw.githubusercontent.com/jasonljit/kubernetes-demo/master/config-map/pod-with-config-map.yaml
 ```
 [pod-with-config-map.yaml](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/pod-with-config-map.yaml)  
 [docker-demo:1.0.3](https://github.com/jasonljit/kubernetes-demo/blob/master/config-map/docker-demo-1.0.3/index.js)
 
 **進到 container 的 bash，用 curl 戳 server，確認 config map 有被掛載**
 ```
-kubectl exec -it pod-with-config-map -- /bin/bash
+kubectl exec -it pod-with-config-map -- bash
 curl localhost:3000/config
 ```
 
